@@ -31,6 +31,10 @@ You can also use PostgreSQL and maybe other PDO supported databases.
 
 ## usage 
 
+Install
+
+    composer require diversen/simple-db-cache
+
 ~~~php
     include_once "vendor/autoload.php";
 
@@ -49,11 +53,23 @@ You can also use PostgreSQL and maybe other PDO supported databases.
 
     // Cache for 10 seconds
     $cache_res = $cache->get($cache_key, 10);
-    if (!$cache_res) {
-        echo "No cache result. Setting cache<br />";
-        $cache_value = 'Hello there<br />';
+
+    // Cache return NULL if no result or if result is outdated
+    if ($cache_res === NULL) {
+        echo "No cache result. Setting cache\n";
+        
+        // Set cache by a key and value
+        // The cache operation is using begin, rollback and commit
+
+        $cache_value = array('Hello there World!');
         $cache->set($cache_key, $cache_value);
     } else {
-        echo $cache_res;
+
+        // Echo the cache result
+        print_r( $cache_res);
     }
 ~~~
+
+## License
+
+MIT © [Dennis Iversen](https://github.com/diversen)
