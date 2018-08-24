@@ -92,5 +92,6 @@ class DbCache {
                     filter('id =', md5($id))->
                     exec();
         }
+        return true;
     }
 }
