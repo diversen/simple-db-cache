@@ -60,6 +60,7 @@ Install
         
         // Set cache by a key and value
         // The cache operation is using begin, rollback and commit
+        // And returns if the commit is a success else false
 
         $cache_value = array('Hello there World!');
         $cache->set($cache_key, $cache_value);

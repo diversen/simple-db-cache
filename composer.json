@@ -1,4 +1,23 @@
 {
+    "name": "diversen/simple-db-cache",
+    "type": "library",
+    "description": "Very simple key / value cache using a PDO database",
+    "homepage": "http://github.com/diversen/simple-db-cache",
+    "keywords": ["cache", "database"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dennis Iversen",
+            "email": "dennis.iversen@gmail.com",
+            "homepage": "http://github.com/diversen",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "diversen\\": ""
+        }
+    },
     "require": {
         "diversen/minimal-query-builder": "1.1.0"
     }
