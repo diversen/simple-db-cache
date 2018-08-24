@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Very simple key / value cache using a PDO database",
     "homepage": "http://github.com/diversen/simple-db-cache",
-    "keywords": ["cache", "database"],
+    "keywords": ["cache", "database", "PDO"],
     "license": "MIT",
     "authors": [
         {
