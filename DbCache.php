@@ -4,14 +4,16 @@ namespace diversen;
 
 use diversen\db\q;
 
-class DbCache {
+class DbCache
+{
 
     /**
      * constructor
      * @param   object $conn PDO connection
      * @param   string $table database table
      */
-    public function __construct ($conn, $table = null) {
+    public function __construct($conn, $table = null)
+    {
         if ($table) {
             $this->table = $table;
         }
@@ -19,7 +21,7 @@ class DbCache {
     }
 
     public $useTransactions = true;
-        
+
     /**
      * Default database cache table name
      */
@@ -31,7 +33,8 @@ class DbCache {
      * @param int $max_life_time max life time in seconds
      * @return mixed $res NULL if no result of if result is outdated. Else return the result
      */
-    public function get($id, $max_life_time = null) {
+    public function get($id, $max_life_time = null)
+    {
 
         $row = q::select($this->table)->filter('id =', md5($id))->fetchSingle();
         if (!$row) {
@@ -48,7 +51,6 @@ class DbCache {
         } else {
             return unserialize($row['data']);
         }
-        return null;
     }
     /**
      * Sets a string in cache
@@ -56,7 +58,8 @@ class DbCache {
      * @param   string  $data
      * @return  string   $res true on succes else false
      */
-    public function set($id, $data) {
+    public function set($id, $data)
+    {
         q::begin();
 
         $res = $this->delete($id);
@@ -82,15 +85,16 @@ class DbCache {
      * @param   int     $id
      * @return  boolean $res db result
      */
-    public function delete($id) {
+    public function delete($id)
+    {
 
         $row = q::select($this->table)->
-                filter('id =', md5($id))->
-                fetchSingle();
+            filter('id =', md5($id))->
+            fetchSingle();
         if (!empty($row)) {
             return q::delete($this->table)->
-                    filter('id =', md5($id))->
-                    exec();
+                filter('id =', md5($id))->
+                exec();
         }
         return true;
     }
