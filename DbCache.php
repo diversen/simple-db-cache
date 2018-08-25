@@ -20,8 +20,6 @@ class DbCache
         q::connect($conn);
     }
 
-    public $useTransactions = true;
-
     /**
      * Default database cache table name
      */

@@ -19,6 +19,6 @@
         }
     },
     "require": {
-        "diversen/minimal-query-builder": "1.1.0"
+        "diversen/minimal-query-builder": "^1.1"
     }
 }
