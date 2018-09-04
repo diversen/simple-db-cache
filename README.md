@@ -7,10 +7,9 @@ Very simple key / value cache using a PDO database
 You will need a database table, e.g. sqlite:
 ~~~sql
     CREATE TABLE `cache_system` (
-    `id` varchar(32) NOT NULL,
+    `id` varchar(64) NOT NULL,
     `data` text,
     `unix_ts` int(10) DEFAULT NULL,
-    `name` varchar(255) DEFAULT '',
     PRIMARY KEY (`id`)
     )
 ~~~
@@ -18,10 +17,9 @@ You will need a database table, e.g. sqlite:
 Or MySQL: 
 ~~~sql
     CREATE TABLE `cache_system` (
-    `id` varchar(32) NOT NULL,
+    `id` varchar(64) NOT NULL,
     `data` mediumtext,
     `unix_ts` int(10) DEFAULT NULL,
-    `name` varchar(255) DEFAULT '',
     PRIMARY KEY (`id`),
     KEY `idx_system_cache` (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
@@ -49,6 +47,7 @@ Install
     $cache = new \diversen\DbCache($conn, 'cache_system');
 
     // Some kind of unique key
+    // Keys can also be objects or arrays
     $cache_key = 'Hello world';
 
     // Cache for 10 seconds
@@ -60,7 +59,7 @@ Install
         
         // Set cache by a key and value
         // The cache operation is using begin, rollback and commit
-        // And returns if the commit is a success else false
+        // And returns if the commit is a success - else false
 
         $cache_value = array('Hello there World!');
         $cache->set($cache_key, $cache_value);

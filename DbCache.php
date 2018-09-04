@@ -8,6 +8,11 @@ class DbCache
 {
 
     /**
+     * Default database cache table name
+     */
+    public $table = 'cache_system';
+
+    /**
      * constructor
      * @param   object $conn PDO connection
      * @param   string $table database table
@@ -20,10 +25,23 @@ class DbCache
         q::connect($conn);
     }
 
+    public function generateKey ($id) {
+        
+        $key = null;
+        if (is_string($id)) {
+            $key = $id;
+        } else {
+            $key = json_encode($id);
+        }
+        return $this->hash($key);
+    }
+
     /**
-     * Default database cache table name
+     * Hash a key using sha256
      */
-    public $table = 'cache_system';
+    public function hash ($key) {
+        return hash('sha256', $key);
+    }
 
     /**
      * Get a cache result
@@ -34,14 +52,14 @@ class DbCache
     public function get($id, $max_life_time = null)
     {
 
-        $row = q::select($this->table)->filter('id =', md5($id))->fetchSingle();
+        $row = q::select($this->table)->filter('id =', $this->generateKey($id))->fetchSingle();
         if (!$row) {
             return null;
         }
         if ($max_life_time) {
             $expire = $row['unix_ts'] + $max_life_time;
             if ($expire < time()) {
-                $this->delete(md5($id));
+                $this->delete($this->generateKey($id));
                 return null;
             } else {
                 return unserialize($row['data']);
@@ -66,7 +84,7 @@ class DbCache
             return false;
         }
 
-        $values = array('id' => md5($id), 'unix_ts' => time());
+        $values = array('id' => $this->generateKey($id), 'unix_ts' => time());
         $values['data'] = serialize($data);
 
         $res = q::insert($this->table)->values($values)->exec();
@@ -87,11 +105,11 @@ class DbCache
     {
 
         $row = q::select($this->table)->
-            filter('id =', md5($id))->
+            filter('id =', $this->generateKey($id))->
             fetchSingle();
         if (!empty($row)) {
             return q::delete($this->table)->
-                filter('id =', md5($id))->
+                filter('id =', $this->generateKey($id))->
                 exec();
         }
         return true;
