@@ -15,11 +15,10 @@
     ],
     "autoload": {
         "psr-4": {
-            "diversen\\": ""
+            "Cache\\": ""
         }
     },
     "require": {
-        "diversen/minimal-query-builder": "^1.1"
     },
     "extra": {
         "branch-alias": {

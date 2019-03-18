@@ -1,10 +1,10 @@
 <?php
 
-namespace diversen;
+namespace Cache;
 
-use diversen\db\q;
+use Cache\DBInstance;
 
-class DbCache
+class DBCache
 {
 
     /**
@@ -22,7 +22,7 @@ class DbCache
         if ($table) {
             $this->table = $table;
         }
-        q::connect($conn);
+        new DBInstance($conn);
     }
 
     public function generateKey ($id) {
@@ -52,8 +52,11 @@ class DbCache
     public function get($id, $max_life_time = null)
     {
 
-        $row = q::select($this->table)->filter('id =', $this->generateKey($id))->fetchSingle();
-        if (!$row) {
+        $query = "SELECT * FROM {$this->table} WHERE id = ? ";
+        $db = DBInstance::get();
+        $row = $db->prepareFetch($query, [$this->generateKey($id)]);
+        
+        if (empty($row)) {
             return null;
         }
         if ($max_life_time) {
@@ -76,24 +79,24 @@ class DbCache
      */
     public function set($id, $data)
     {
-        q::begin();
+        $db = DBInstance::get();
+        $db->beginTransaction();
 
         $res = $this->delete($id);
         if (!$res) {
-            q::rollback();
+            $db->rollback();
             return false;
         }
 
-        $values = array('id' => $this->generateKey($id), 'unix_ts' => time());
-        $values['data'] = serialize($data);
+        $query = "INSERT INTO {$this->table} ('id', 'unix_ts', 'data') VALUES (?, ?, ?)";
+        $res = $db->prepareExecute($query, [$this->generateKey($id), time(), serialize($data) ]);
 
-        $res = q::insert($this->table)->values($values)->exec();
         if (!$res) {
-            q::rollback();
+            $db->rollback();
             return false;
         }
 
-        return q::commit();
+        return $db->commit();
     }
 
     /**
@@ -104,14 +107,16 @@ class DbCache
     public function delete($id)
     {
 
-        $row = q::select($this->table)->
-            filter('id =', $this->generateKey($id))->
-            fetchSingle();
+        $db = DBInstance::get();
+
+        $query = "SELECT * FROM {$this->table} WHERE id = ?";
+        $row = $db->prepareFetch($query, [$this->generateKey($id)]);
+
         if (!empty($row)) {
-            return q::delete($this->table)->
-                filter('id =', $this->generateKey($id))->
-                exec();
+            $query = "DELETE FROM {$this->table} WHERE id = ?";
+            return $db->prepareExecute($query, [$this->generateKey($id)]);
         }
+        
         return true;
     }
 }

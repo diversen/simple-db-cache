@@ -34,21 +34,19 @@ Install
     composer require diversen/simple-db-cache
 
 ~~~php
-    include_once "vendor/autoload.php";
-
-    use diversen\DbCache;
+    use Cache\DBCache;
 
     // Connect to PDO sqlite
     $pdo_url = 'sqlite:./database.lite';
 
+    // Create a connection
     $conn = new PDO($pdo_url);
 
-    // Create cache object - second param is optional
-    $cache = new \diversen\DbCache($conn, 'cache_system');
+    // Create cache object - second param is the DB cache table
+    $cache = new DBCache($conn, 'cache_system');
 
-    // Some kind of unique key
-    // Keys can also be objects or arrays
-    $cache_key = 'Hello world';
+    // Some kind of unique key. Usually a string but an array or object will work as well
+    $cache_key = array('Hello world');
 
     // Cache for 10 seconds
     $cache_res = $cache->get($cache_key, 10);
@@ -59,9 +57,8 @@ Install
         
         // Set cache by a key and value
         // The cache operation is using begin, rollback and commit
-        // And returns if the commit is a success - else false
 
-        $cache_value = array('Hello there World!');
+        $cache_value = array('Hello there World ÆØÅ!');
         $cache->set($cache_key, $cache_value);
     } else {
 
