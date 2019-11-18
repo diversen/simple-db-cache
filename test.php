@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include_once "vendor/autoload.php";
+// include_once "vendor/autoload.php";
 
 // Just included in order to test. 
 include_once "DBCache.php";
@@ -18,7 +18,6 @@ $pdo_url = 'sqlite:./database.lite';
 
 // Create a connection
 $conn = new PDO($pdo_url);
-
 // Create cache object - second param is the DB cache table
 $cache = new DBCache($conn, 'cache_system');
 

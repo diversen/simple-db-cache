@@ -88,7 +88,7 @@ class DBCache
             return false;
         }
 
-        $query = "INSERT INTO {$this->table} ('id', 'unix_ts', 'data') VALUES (?, ?, ?)";
+        $query = "INSERT INTO {$this->table} (id, unix_ts, data) VALUES (?, ?, ?)";
         $res = $db->prepareExecute($query, [$this->generateKey($id), time(), serialize($data) ]);
 
         if (!$res) {
