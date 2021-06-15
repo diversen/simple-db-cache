@@ -65,10 +65,10 @@ class DBCache
                 $this->delete($this->generateKey($id));
                 return null;
             } else {
-                return unserialize($row['data']);
+                return json_decode($row['data']);
             }
         } else {
-            return unserialize($row['data']);
+            return json_decode($row['data']);
         }
     }
     /**
@@ -89,7 +89,7 @@ class DBCache
         }
 
         $query = "INSERT INTO {$this->table} (id, unix_ts, data) VALUES (?, ?, ?)";
-        $res = $db->prepareExecute($query, [$this->generateKey($id), time(), serialize($data) ]);
+        $res = $db->prepareExecute($query, [$this->generateKey($id), time(), json_encode($data) ]);
 
         if (!$res) {
             $db->rollback();
