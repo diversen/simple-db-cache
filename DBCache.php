@@ -49,7 +49,7 @@ class DBCache
      * @param int $max_life_time max life time in seconds
      * @return mixed $res NULL if no result of if result is outdated. Else return the result
      */
-    public function get($id, $max_life_time = null)
+    public function get($id, $max_life_time = null, $assoc = false)
     {
 
         $query = "SELECT * FROM {$this->table} WHERE id = ? ";
@@ -65,10 +65,10 @@ class DBCache
                 $this->delete($this->generateKey($id));
                 return null;
             } else {
-                return json_decode($row['data']);
+                return json_decode($row['data'], $assoc);
             }
         } else {
-            return json_decode($row['data']);
+            return json_decode($row['data'], $assoc);
         }
     }
     /**

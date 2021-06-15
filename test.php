@@ -34,10 +34,15 @@ if ($cache_res === NULL) {
     // Set cache by a key and value
     // The cache operation is using begin, rollback and commit
 
-    $cache_value = array('Hello there World ÆØÅ!');
+    $cache_value = array(0 => 'test', 'str_key' => 'Hello there World ÆØÅ!');
     $cache->set($cache_key, $cache_value);
 } else {
 
     // Echo the cache result
     print_r( $cache_res);
+    // Get assoc array
+    $cache_res = $cache->get($cache_key, 10, $assoc = true);
+		
+		print_r($cache_res);
+
 }
