@@ -36,10 +36,10 @@ if ($cache_res === null) {
     echo "No cache result. Setting cache\n";
 
     $cache_value = array(0 => 'test', 'str_key' => 'Hello there World ÆØÅ! and som random stuff: ' . rand());
-    
-	echo "Setting cache\n";
-	
-	$cache->set($cache_key, $cache_value);
+
+    echo "Setting cache\n";
+
+    $cache->set($cache_key, $cache_value);
 } else {
 
     // output the cache result
@@ -48,14 +48,15 @@ if ($cache_res === null) {
 }
 
 // Test for a bit more variables
-function test_10000($cache) {
+function test_10000($cache)
+{
 
-	for ($i = 0; $i < 10000; $i++) {
-		if ($i % 1000 === 0) {
-			echo "$i\n";
-		}
-		$cache->set($i, $i . ' ' . rand());
-	}
+    for ($i = 0; $i < 10000; $i++) {
+        if ($i % 1000 === 0) {
+            echo "$i\n";
+        }
+        $cache->set($i, $i . ' ' . rand());
+    }
 }
 
 // test_10000($cache);
