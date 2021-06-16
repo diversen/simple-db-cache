@@ -44,12 +44,17 @@ class DBCache
     }
 
     /**
+     * Get the cache json as assoc
+     */
+    public $assoc = false;
+
+    /**
      * Get a cache result
      * @param string $id
      * @param int $max_life_time max life time in seconds
      * @return mixed $res NULL if no result of if result is outdated. Else return the result
      */
-    public function get($id, $max_life_time = null, $assoc = false)
+    public function get($id, $max_life_time = null)
     {
 
         $query = "SELECT * FROM {$this->table} WHERE id = ? ";
@@ -59,16 +64,17 @@ class DBCache
         if (empty($row)) {
             return null;
         }
+        
         if ($max_life_time) {
             $expire = $row['unix_ts'] + $max_life_time;
             if ($expire < time()) {
                 $this->delete($this->generateKey($id));
                 return null;
             } else {
-                return json_decode($row['data'], $assoc);
+                return json_decode($row['data'], $this->assoc);
             }
         } else {
-            return json_decode($row['data'], $assoc);
+            return json_decode($row['data'], $this->assoc);
         }
     }
     /**
